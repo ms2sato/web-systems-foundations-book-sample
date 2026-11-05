@@ -1,0 +1,96 @@
+{
+  "uid": "error-watch",
+  "title": "エラーウォッチ",
+  "description": "アプリが自覚したエラー（ロガーの ERROR/WARN）を可視化する。エラー監視サービスの疑似体験として、直近5分にエラーログがあるとタイルが赤くなる",
+  "tags": ["sample"],
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "refresh": "30s",
+  "time": { "from": "now-1h", "to": "now" },
+  "panels": [
+    {
+      "id": 1,
+      "type": "stat",
+      "title": "ERROR（直近5分）",
+      "gridPos": { "h": 6, "w": 6, "x": 0, "y": 0 },
+      "datasource": { "type": "loki", "uid": "loki" },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum(count_over_time({service=~\"app|worker\"} |= `ERROR` [5m]))",
+          "queryType": "instant"
+        }
+      ],
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "colorMode": "background",
+        "graphMode": "none",
+        "noValue": "0"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "red", "value": 1 }
+            ]
+          },
+          "noValue": "0"
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 2,
+      "type": "stat",
+      "title": "WARN（直近5分）",
+      "gridPos": { "h": 6, "w": 6, "x": 6, "y": 0 },
+      "datasource": { "type": "loki", "uid": "loki" },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum(count_over_time({service=~\"app|worker\"} |= `WARN` [5m]))",
+          "queryType": "instant"
+        }
+      ],
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "colorMode": "background",
+        "graphMode": "none",
+        "noValue": "0"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 1 }
+            ]
+          },
+          "noValue": "0"
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 3,
+      "type": "logs",
+      "title": "エラーログ",
+      "gridPos": { "h": 12, "w": 24, "x": 0, "y": 6 },
+      "datasource": { "type": "loki", "uid": "loki" },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "{service=~\"app|worker\"} |= `ERROR`"
+        }
+      ],
+      "options": {
+        "showTime": true,
+        "wrapLogMessage": true,
+        "sortOrder": "Descending"
+      }
+    }
+  ]
+}

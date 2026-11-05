@@ -1,0 +1,54 @@
+name: Lint
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  eslint:
+    name: eslint (app)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      # app は .npmrc の min-release-age（age gate）を使う。この機能は
+      # npm 11.10.0 以降でのみ動くため、runner 同梱の npm（10.x）を差し替える。
+      # package.json の engines.npm + engine-strict により、差し替えないと
+      # npm ci が EBADENGINE で止まる。Dockerfile 側と同じバージョンに揃える。
+      - name: Upgrade npm
+        run: npm install -g npm@11.17.0
+
+      - name: Install dependencies
+        working-directory: app
+        run: npm ci
+
+      # recommendedTypeChecked は @prisma/client の生成された型を使って型チェックする。
+      # npm ci だけでは prisma generate が走らないため、lint 実行前に明示的に生成する。
+      # generate は DB に接続しないが、prisma.config.ts の読み込みに DATABASE_URL が
+      # 必須（未設定だと config のロード自体が失敗する）なので、値は形式が合っていれば
+      # 何でもよいダミーを与える
+      - name: Generate Prisma client
+        working-directory: app
+        env:
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/app
+        run: npx prisma generate
+
+      - name: Run ESLint
+        working-directory: app
+        run: npm run lint
