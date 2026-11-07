@@ -1,7 +1,7 @@
 import js from '@eslint/js'
 import tseslint from 'typescript-eslint'
 
-// recommended 系の一式 + sample-code.md（AI 作業者向けルール）と重なる項目を明示設定した構成。
+// recommended 系の一式に、このサンプルのコーディング方針と重なる項目を明示設定した構成。
 // 型情報を使う recommendedTypeChecked を使うため、parserOptions.projectService が必要
 export default tseslint.config(
   js.configs.recommended,
@@ -18,10 +18,10 @@ export default tseslint.config(
       // if / else / for / while は単文でも必ず {} を付ける
       curly: ['error', 'all'],
 
-      // 非 null アサーション `!` の禁止（sample-code.md: 型は宣言で表現する）
+      // 非 null アサーション `!` の禁止（型は宣言で表現する）
       '@typescript-eslint/no-non-null-assertion': 'error',
 
-      // `as` の制限（sample-code.md: 型は宣言で表現する）。
+      // `as` の制限（型は宣言で表現する）。
       // objectLiteralTypeAssertions のデフォルト 'never' はオブジェクト**リテラル**への
       // アサーション（例: `{} as Foo`）を禁止するもので、`error.meta as {...}` のような
       // 「型情報がないデータへの形の注釈」（プロパティアクセス式へのアサーション）は
@@ -31,7 +31,7 @@ export default tseslint.config(
         { assertionStyle: 'as', objectLiteralTypeAssertions: 'never' },
       ],
 
-      // console の直接呼び出し禁止（sample-code.md: ログは lib/log.ts の log を使う）
+      // console の直接呼び出し禁止（ログは lib/log.ts の log を使う）
       'no-console': 'error',
 
       // catch した error（型は unknown）をログ文字列に `${error}` のまま埋める書き方を
@@ -50,11 +50,11 @@ export default tseslint.config(
   {
     // index.ts の各 API ハンドラは `await c.req.json()` の戻り値（Hono の型は Promise<any>。
     // このプロジェクトではスキーマバリデーションミドルウェアを使っていない）を分割代入で
-    // 受け取っている。以降 typeof 等の実行時チェックで検証してから使っており
-    // （sample-code.md の「型情報がないデータ」の扱いと同じ考え方）、安全性の担保は
-    // その実行時チェックが担っている。no-unsafe-* 系は静的型がないこと自体を検出するため
-    // ここでは必ず違反になる。全ハンドラをスキーマバリデーション導入で書き換えるのは
-    // このIssueの範囲外のため、index.ts に限定して off にする
+    // 受け取っている。以降 typeof 等の実行時チェックで検証してから使っており、
+    // 安全性の担保はその実行時チェックが担っている。no-unsafe-* 系は静的型が
+    // ないこと自体を検出するためここでは必ず違反になる。全ハンドラをスキーマ
+    // バリデーション導入で書き換えるのはこのサンプルの範囲外のため、
+    // index.ts に限定して off にする
     files: ['src/index.ts'],
     rules: {
       '@typescript-eslint/no-unsafe-assignment': 'off',

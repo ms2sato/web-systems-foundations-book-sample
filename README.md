@@ -18,7 +18,7 @@
 ## 起動方法
 
 ```bash
-git clone git@github.com:ms2sato/web-systems-foundations-book-sample.git
+git clone https://github.com/ms2sato/web-systems-foundations-book-sample.git
 cd web-systems-foundations-book-sample
 docker compose up
 ```
@@ -104,11 +104,7 @@ docker compose exec app npm run test
 
 テストはデモ用のデータベース（`app`）ではなく、同じ PostgreSQL 内のテスト専用データベース（`app_test`）に接続します。テストはクリーンアップとしてレコードを削除するため、デモと同じデータベースを使うとアップロード済みファイルが消えてしまいます。データベースを分けることで、テストを何度実行してもデモ画面のデータは変化しません。
 
-`app_test` は初回の `docker compose up` 時に初期化スクリプト（`db/init/`）で自動作成され、テスト開始時に最新のスキーマが自動適用されます。初期化スクリプトは PostgreSQL のデータボリュームが空のときしか実行されないため、**この変更より前から環境を起動している場合**は、一度だけ手動で作成してください：
-
-```bash
-docker compose exec db psql -U postgres -c 'CREATE DATABASE app_test'
-```
+`app_test` は初回の `docker compose up` 時に初期化スクリプト（`db/init/`）で自動作成され、テスト開始時に最新のスキーマが自動適用されます。
 
 ## 停止
 
