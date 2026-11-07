@@ -132,7 +132,10 @@ app.get('/health', (c) => {
 app.post('/api/upload-url', async (c) => {
   const { contentType } = await c.req.json().catch(() => ({}))
 
-  const ext = typeof contentType === 'string' ? UPLOAD_CONTENT_TYPES[contentType] : undefined
+  const ext =
+    typeof contentType === 'string' && Object.hasOwn(UPLOAD_CONTENT_TYPES, contentType)
+      ? UPLOAD_CONTENT_TYPES[contentType]
+      : undefined
   if (!ext) {
     return c.json({ error: 'アップロードできるのは画像ファイルのみです' }, 400)
   }
