@@ -1,0 +1,38 @@
+body { font-family: sans-serif; max-width: 900px; margin: 50px auto; padding: 20px; }
+.server-info { background: #e3f2fd; padding: 15px; border-radius: 5px; margin-bottom: 30px; }
+.hostname { font-weight: bold; color: #1565c0; font-size: 1.2em; }
+.section { background: #f5f5f5; padding: 20px; border-radius: 5px; margin-bottom: 20px; }
+.section h2 { margin-top: 0; font-size: 1.1em; }
+input[type="file"] { padding: 8px; margin-right: 10px; }
+button { padding: 8px 16px; background: #1976d2; color: white; border: none; border-radius: 4px; cursor: pointer; margin-right: 8px; }
+button:hover { background: #1565c0; }
+button:disabled { background: #ccc; cursor: not-allowed; }
+button.debug { background: #ff9800; }
+button.debug:hover { background: #f57c00; }
+.result { margin-top: 10px; padding: 10px; background: #e8f5e9; border-radius: 4px; display: none; }
+.result.error { background: #ffebee; }
+.links { margin-top: 30px; }
+.links a { display: inline-block; margin-right: 20px; color: #1976d2; }
+.note { font-size: 0.9em; color: #666; margin-top: 10px; }
+.file-list { margin: 15px 0; max-height: 400px; overflow-y: auto; }
+.file-item { display: flex; align-items: center; padding: 10px; border-bottom: 1px solid #ddd; gap: 10px; }
+.file-item:hover { background: #e8e8e8; }
+.file-item input[type="checkbox"] { flex-shrink: 0; }
+.file-info { flex: 1; min-width: 0; }
+.file-name { font-family: monospace; font-size: 0.9em; word-break: break-all; }
+.file-meta { font-size: 0.8em; color: #666; margin-top: 4px; }
+.file-actions { display: flex; gap: 6px; flex-shrink: 0; }
+.file-actions button { padding: 4px 8px; font-size: 0.8em; margin: 0; }
+.thumbnail-badge { display: inline-block; background: #4caf50; color: white; padding: 2px 6px; border-radius: 3px; font-size: 0.7em; margin-left: 8px; }
+.toolbar { margin-bottom: 10px; display: flex; flex-wrap: wrap; gap: 8px; }
+.toolbar button { margin: 0; padding: 6px 12px; font-size: 0.9em; }
+.empty-message { color: #666; font-style: italic; padding: 20px; text-align: center; }
+.archive-list { margin-top: 15px; }
+.archive-item { padding: 10px; border: 1px solid #ddd; border-radius: 4px; margin-bottom: 10px; background: white; }
+.archive-item .status { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 0.8em; margin-left: 8px; }
+.status.PENDING { background: #fff3e0; color: #e65100; }
+.status.PROCESSING { background: #e3f2fd; color: #1565c0; }
+.status.COMPLETED { background: #e8f5e9; color: #2e7d32; }
+.status.FAILED { background: #ffebee; color: #c62828; }
+.debug-section { background: #fff8e1; border: 2px dashed #ff9800; }
+.debug-section h3 { color: #f57c00; margin-top: 0; }

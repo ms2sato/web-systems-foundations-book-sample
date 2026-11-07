@@ -1,0 +1,68 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// アップロードファイルの管理
+model UploadedFile {
+  id            String      @id @default(cuid())
+  s3Key         String      @unique
+  originalName  String
+  contentType   String
+  size          Int
+  createdAt     DateTime    @default(now())
+
+  thumbnail     Thumbnail?
+  archives      ArchiveFile[]
+}
+
+// サムネイル（パターン1: Unique制約で冪等性担保）
+model Thumbnail {
+  id        String   @id @default(cuid())
+  fileId    String   @unique  // ← Unique制約（1ファイルに1サムネイル）
+  s3Key     String   @unique
+  width     Int
+  height    Int
+  createdAt DateTime @default(now())
+
+  file      UploadedFile @relation(fields: [fileId], references: [id])
+}
+
+// アーカイブ（パターン2: 状態フラグ+ロックで冪等性担保）
+model Archive {
+  id            String        @id @default(cuid())
+  s3Key         String        @unique
+  status        ArchiveStatus @default(PENDING)  // 状態フラグ
+  size          Int?
+  fileCount     Int
+
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt @default(now())  // 最終更新時刻
+  startedAt     DateTime?     // PROCESSING開始時刻
+  completedAt   DateTime?     // 完了時刻
+  failedAt      DateTime?     // 失敗時刻
+  errorMessage  String?       // エラー内容
+
+  files         ArchiveFile[]
+}
+
+model ArchiveFile {
+  archive       Archive       @relation(fields: [archiveId], references: [id])
+  archiveId     String
+  file          UploadedFile  @relation(fields: [fileId], references: [id])
+  fileId        String
+
+  @@id([archiveId, fileId])
+}
+
+enum ArchiveStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}

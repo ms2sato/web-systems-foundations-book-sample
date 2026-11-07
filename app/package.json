@@ -1,0 +1,51 @@
+{
+  "name": "sample-app",
+  "version": "1.0.0",
+  "type": "module",
+  "engines": {
+    "npm": ">=11.10.0"
+  },
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "worker": "tsx watch src/worker.ts",
+    "init-garage": "tsx src/scripts/init-garage.ts",
+    "start": "node dist/index.js",
+    "build": "tsc",
+    "test": "vitest run",
+    "lint": "eslint src",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.995.0",
+    "@aws-sdk/lib-storage": "^3.1100.0",
+    "@aws-sdk/s3-request-presigner": "^3.1100.0",
+    "@bull-board/api": "^6.0.0",
+    "@bull-board/hono": "^6.0.0",
+    "@hono/node-server": "^2.1.0",
+    "@prisma/adapter-pg": "^7.1.0",
+    "@prisma/client": "^7.1.0",
+    "@types/sharp": "^0.31.1",
+    "archiver": "^7.0.0",
+    "bullmq": "^5.0.0",
+    "hono": "^4.12.7",
+    "ioredis": "^5.4.0",
+    "pg": "^8.16.3",
+    "prisma": "^7.1.0",
+    "sharp": "^0.35.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/archiver": "^7.0.0",
+    "@types/node": "^22.0.0",
+    "@types/pg": "^8.16.0",
+    "eslint": "^10.8.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0",
+    "typescript-eslint": "^8.66.0",
+    "vitest": "^4.0.15"
+  },
+  "overrides": {
+    "vite": "^7.3.5",
+    "deepmerge-ts": "^8.0.0"
+  }
+}
