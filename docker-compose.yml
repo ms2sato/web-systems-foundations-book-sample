@@ -12,7 +12,9 @@ services:
   loadbalancer:
     image: nginx:alpine
     ports:
-      - "8080:80"
+      # 認証を実装していないため、同じネットワーク上の他人からアクセスされないよう
+      # 127.0.0.1 だけで待ち受ける（以下、公開ポート全てで同様）
+      - "127.0.0.1:8080:80"
     volumes:
       - ./loadbalancer/nginx.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:
@@ -78,7 +80,7 @@ services:
       # 初回起動時（データボリュームが空のとき）だけ実行される初期化スクリプト
       - ./db/init:/docker-entrypoint-initdb.d:ro
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5432:5432"
     # db-init はコンテナの起動開始（depends_on のデフォルト）ではなく、Postgres が
     # 接続を受け付けられる状態を待つ必要がある。ここが無いと、コンテナ起動直後の
     # 初期化中（initdb 実行中など）に db-init が接続を試みて失敗しうる
@@ -98,7 +100,7 @@ services:
   redis:
     image: redis:7-alpine
     ports:
-      - "6379:6379"
+      - "127.0.0.1:6379:6379"
     volumes:
       - redis_data:/data
 
@@ -120,8 +122,8 @@ services:
   garage:
     image: dxflrs/garage:v1.0.1
     ports:
-      - "3900:3900"
-      - "3903:3903"
+      - "127.0.0.1:3900:3900"
+      - "127.0.0.1:3903:3903"
     volumes:
       - ./garage/garage.toml:/etc/garage.toml:ro
       - garage_data:/var/lib/garage
@@ -152,7 +154,7 @@ services:
   s3manager:
     image: cloudlena/s3manager
     ports:
-      - "9000:8080"
+      - "127.0.0.1:9000:8080"
     environment:
       ENDPOINT: garage:3900
       ACCESS_KEY_ID: *garage-access-key-id
@@ -165,7 +167,7 @@ services:
   loki:
     image: grafana/loki:3.0.0
     ports:
-      - "3100:3100"
+      - "127.0.0.1:3100:3100"
     command: -config.file=/etc/loki/local-config.yaml
     volumes:
       - loki_data:/loki
@@ -182,7 +184,7 @@ services:
   grafana:
     image: grafana/grafana:11.0.0
     ports:
-      - "3001:3000"
+      - "127.0.0.1:3001:3000"
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=admin
       - GF_AUTH_ANONYMOUS_ENABLED=true
