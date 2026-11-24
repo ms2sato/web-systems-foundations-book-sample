@@ -6,9 +6,5 @@ export const S3_BUCKET = 'uploads'
 export const s3Client = new S3Client({
   endpoint: AWS_ENDPOINT,
   region: process.env.AWS_REGION || 'ap-northeast-1',
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID || 'test',
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || 'test',
-  },
   forcePathStyle: true,
 })
